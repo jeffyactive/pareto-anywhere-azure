@@ -49,6 +49,15 @@ jobs:
     - name: Install azure-cli
       uses: pietrobolcato/install-azure-cli-action@v1.0.1
 
+    # Create the Resource Group
+    - name: Create Resource Group
+      shell: bash
+      run: |
+        az group create --name {{ github.event.inputs.resource_group }} --location ${{ github.event.inputs.azure_region }}
+
+        # TODO: make this work within a workflow
+        # az ad sp create-for-rbac --name ${{ secrets.CLUSTER_SERVICE_PRINCIPAL }} --role Contributor --scopes /subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/{{ github.event.inputs.resource_group }}  --sdk-auth > gh-secret.json
+
     # Create the IoT Hub for Aruba IoT Transport for Azure
     - name: Create IoT Hub for Aruba IoT Transport for Azure
       shell: bash
