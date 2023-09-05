@@ -24,12 +24,11 @@ jobs:
     - name: Create environment variable
       shell: bash
       run: |
-        echo "SUFFIX=-$(date --rfc-3339=date)-${{ github.run_attempt }}" >> ${GITHUB_ENV}
-
+        echo "SUFFIX=-$(date +"%Y%m%d)-${{ github.run_attempt }}" >> ${GITHUB_ENV}
 
     # Echo the names
     - name: Echo names
       shell: bash
       run: |
         echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }} ${{ env.SUFFIX }}
-        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }} ${{ env.SUFFIX_NAME }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }} ${{ env.SUFFIX }}
