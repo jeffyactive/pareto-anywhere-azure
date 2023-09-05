@@ -37,6 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IOT_HUB_NAME: aruba-iot-hub-${RANDOM}
+      IOT_HUB_ENDPOINT: ''
+      DPS_NAME: aruba-dps-${RANDOM}
     steps:
 
     # Use the master branch
@@ -62,19 +64,16 @@ jobs:
       shell: bash
       run: |
         az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku F1 --partition-count 2 --location ${{ github.event.inputs.azure_region }}
-        az iot hub device-identity create --hub-name ${{ env.IOT_HUB_NAME }}
         export iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
-        echo "Config-iothubendpoint=$iothubendpoint" >> $GITHUB_ENV
-        echo "iothubname: ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.Config-iothubendpoint }}"
+        echo "IOT_HUB_ENDPOINT=$iothubendpoint" >> $GITHUB_ENV
+        echo "iothubname: ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.IOT_HUB_ENDPOINT }}"
 
     # Create the Device Provisioning Service for Aruba IoT Transport for Azure
     - name: Create Device Provisioning Service
       shell: bash
       run: |
-        dpsname="aruba-dps-$RANDOM"
-        echo "Config-dpsname=$dpsname" >> $GITHUB_ENV
-        az iot dps create --name $dpsname --resource-group ${{ github.event.inputs.resource_group }} --location ${{ github.event.inputs.azure_region }} --sku S1 --unit 1
-        az iot dps linked-hub create --dps-name $dpsname --resource-group ${{ github.event.inputs.resource_group }} --connection-string ${{ env.Config-iothubendpoint }} --location ${{ github.event.inputs.azure_region }}
+        az iot dps create --name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --location ${{ github.event.inputs.azure_region }} --sku S1 --unit 1
+        az iot dps linked-hub create --dps-name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --connection-string ${{ env.IOT_HUB_ENDPOINT }} --location ${{ github.event.inputs.azure_region }}
 
     # Create the Event Hub and Namespace
     - name: Create Event Hub
