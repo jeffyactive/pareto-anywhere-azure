@@ -14,16 +14,22 @@ jobs:
     env:
       RANDOM_NAME: name-${RANDOM}
       DATE_NAME: name-$(date +%s)
-      FRIENDLY_DATE_NAME: name-$(Date:YYMMDDhhmm)
       RUN_NAME: name-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
 
     # Use the master branch
     - uses: actions/checkout@master
 
+    # Create an environment variable
+    - name: Create environment variable
+      shell: bash
+      run: |
+        echo "SUFFIX=-$(date --rfc-3339=date)-${{ github.run_attempt }}" >> ${GITHUB_ENV}
+
+
     # Echo the names
     - name: Echo names
       shell: bash
       run: |
-        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.FRIENDLY_DATE_NAME }} ${{ env.RUN_NAME }}
-        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.FRIENDLY_DATE_NAME }} ${{ env.RUN_NAME }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }} ${{ env.SUFFIX }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }} ${{ env.SUFFIX_NAME }}
