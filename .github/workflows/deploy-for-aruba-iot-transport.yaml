@@ -40,6 +40,10 @@ jobs:
     - name: Install azure-cli
       uses: pietrobolcato/install-azure-cli-action@v1.0.1
 
+    # Add the Azure IoT CLI Extension
+    - name: Add the Azure IoT CLI Extension
+      run: az extension add --name azure-iot
+
     # Set the SUBSCRIPTION_ID (from GitHub Action secrets)
     - name: Set default subscription
       run: az account set --subscription ${{secrets.SUBSCRIPTION_ID}}
@@ -68,7 +72,8 @@ jobs:
       shell: bash
       run: |
         az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku S1 --location ${{ github.event.inputs.azure_region }}
-        echo "IOT_HUB_ENDPOINT=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)" >> $GITHUB_ENV
+        iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
+        echo "IOT_HUB_ENDPOINT=$iothubendpoint" >> $GITHUB_ENV
         echo "Created IoT Hub ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.IOT_HUB_ENDPOINT }}"
 
     # Create the Device Provisioning Service for Aruba IoT Transport for Azure
