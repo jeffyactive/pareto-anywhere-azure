@@ -28,6 +28,22 @@ jobs:
       SUFFIX: $(date +"%Y%m%d")${{ github.run_id }}
     steps:
 
+    # Confirm that CLUSTER_SERVICE_PRINCIPAL exists as a GitHub Action secret
+    - name: Confirm that CLUSTER_SERVICE_PRINCIPAL exists as a GitHub Action secret
+      run: |
+        if [ `echo ${{ secrets.CLUSTER_SERVICE_PRINCIPAL }} | wc -c` -lt 2 ]; then
+          echo This Action requires a "CLUSTER_SERVICE_PRINCIPAL" secret;
+          exit 1;
+        fi
+
+    # Confirm that SUBSCRIPTION_ID exists as a GitHub Action secret
+    - name: Confirm that SUBSCRIPTION_ID exists as a GitHub Action secret
+      run: |
+        if [ `echo ${{ secrets.SUBSCRIPTION_ID }} | wc -c` -lt 2 ]; then
+          echo This Action requires a "SUBSCRIPTION_ID" secret;
+          exit 1;
+        fi
+
     # Use the master branch
     - uses: actions/checkout@master
 
