@@ -63,7 +63,7 @@ jobs:
     - name: Create IoT Hub for Aruba IoT Transport for Azure
       shell: bash
       run: |
-        az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku F1 --partition-count 2 --location ${{ github.event.inputs.azure_region }}
+        az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku S1 --location ${{ github.event.inputs.azure_region }}
         export iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
         echo "IOT_HUB_ENDPOINT=$iothubendpoint" >> $GITHUB_ENV
         echo "iothubname: ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.IOT_HUB_ENDPOINT }}"
