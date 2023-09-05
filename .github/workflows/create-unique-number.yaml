@@ -14,6 +14,7 @@ jobs:
     env:
       RANDOM_NAME: name-${RANDOM}
       DATE_NAME: name-$(date +%s)
+      FRIENDLY_DATE_NAME: name-$(Date:YYMMDDhhmm)
       RUN_NAME: name-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
 
@@ -24,5 +25,5 @@ jobs:
     - name: Echo names
       shell: bash
       run: |
-        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }}
-        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.FRIENDLY_DATE_NAME }} ${{ env.RUN_NAME }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.FRIENDLY_DATE_NAME }} ${{ env.RUN_NAME }}
