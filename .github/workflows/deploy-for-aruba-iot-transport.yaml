@@ -31,10 +31,18 @@ jobs:
     # Use the master branch
     - uses: actions/checkout@master
 
-    # Login to Azure as CLUSTER_SERVICE_PRINCIPAL (from GitHub secrets)
+    # Login to Azure as CLUSTER_SERVICE_PRINCIPAL (from GitHub Action secrets)
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.CLUSTER_SERVICE_PRINCIPAL }}
+
+    # Set the SUBSCRIPTION_ID (from GitHub Action secrets)
+    - name: Set default subscription
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
 
     # Install the Azure CLI
     - name: Install azure-cli
