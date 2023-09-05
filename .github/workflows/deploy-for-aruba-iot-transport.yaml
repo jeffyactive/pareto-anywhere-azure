@@ -25,7 +25,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      SUFFIX: $(date +"%Y%m%d")${RANDOM}
+      SUFFIX: $(date +"%Y%m%d")${{ github.run_id }}
     steps:
 
     # Use the master branch
