@@ -35,6 +35,8 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      IOT_HUB_NAME: aruba-iot-hub-${RANDOM}
     steps:
 
     # Use the master branch
@@ -59,13 +61,11 @@ jobs:
     - name: Create IoT Hub for Aruba IoT Transport for Azure
       shell: bash
       run: |
-        iothubname="aruba-iot-hub-$RANDOM"
-        echo "Config-iothubname=$iothubname" >> $GITHUB_ENV
-        az iot hub create --name ${{ env.Config-iothubname }} --resource-group ${{ github.event.inputs.resource_group }} --sku F1 --partition-count 2 --location ${{ github.event.inputs.azure_region }}
-        az iot hub device-identity create --hub-name ${{ env.Config-iothubname }}
-        export iothubendpoint=$(az iot hub connection-string show -n ${{ env.Config-iothubname }} --default --output tsv)
+        az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku F1 --partition-count 2 --location ${{ github.event.inputs.azure_region }}
+        az iot hub device-identity create --hub-name ${{ env.IOT_HUB_NAME }}
+        export iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
         echo "Config-iothubendpoint=$iothubendpoint" >> $GITHUB_ENV
-        echo "iothubname: ${{ env.Config-iothubname }} using Connection String: ${{ env.Config-iothubendpoint }}"
+        echo "iothubname: ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.Config-iothubendpoint }}"
 
     # Create the Device Provisioning Service for Aruba IoT Transport for Azure
     - name: Create Device Provisioning Service
