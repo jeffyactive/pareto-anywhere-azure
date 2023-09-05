@@ -25,7 +25,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      SUFFIX: $(date +"%Y%m%d")-${{ github.run_attempt }}
+      SUFFIX: $(date +"%Y%m%d")${RANDOM}
     steps:
 
     # Use the master branch
@@ -36,17 +36,13 @@ jobs:
       with:
         creds: ${{ secrets.CLUSTER_SERVICE_PRINCIPAL }}
 
-    # Set the SUBSCRIPTION_ID (from GitHub Action secrets)
-    - name: Set default subscription
-      uses: azure/CLI@v1
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
-
     # Install the Azure CLI
     - name: Install azure-cli
       uses: pietrobolcato/install-azure-cli-action@v1.0.1
+
+    # Set the SUBSCRIPTION_ID (from GitHub Action secrets)
+    - name: Set default subscription
+      run: az account set --subscription ${{secrets.SUBSCRIPTION_ID}}
 
     # Create the Resource Group
     - name: Create Resource Group
