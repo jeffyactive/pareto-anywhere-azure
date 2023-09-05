@@ -24,7 +24,7 @@ jobs:
     - name: Create environment variable
       shell: bash
       run: |
-        echo "SUFFIX=-$(date +"%Y%m%d)-${{ github.run_attempt }}" >> ${GITHUB_ENV}
+        echo "SUFFIX=-$(date +"%Y%m%d")-${{ github.run_attempt }}" >> ${GITHUB_ENV}
 
     # Echo the names
     - name: Echo names
