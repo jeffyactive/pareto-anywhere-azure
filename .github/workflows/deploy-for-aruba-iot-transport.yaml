@@ -135,7 +135,7 @@ jobs:
         az functionapp create --name ${{ env.FUNCTION_APP_NAME }} --storage-account ${{ env.STORAGE_ACCOUNT_NAME }} --plan ${{ env.FUNCTION_APP_PLAN_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --runtime node --functions-version 4
 
     # Setup Node.js
-    - name: Setup Node ${{ env.NODE_VERSION }} Environment
+    - name: Setup Node.js Environment
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
