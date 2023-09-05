@@ -24,6 +24,8 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SUFFIX: $(date +"%Y%m%d")-${{ github.run_attempt }}
     steps:
 
     # Use the master branch
@@ -48,7 +50,6 @@ jobs:
     - name: Create environment variables
       shell: bash
       run: |
-        echo "SUFFIX=$(date +"%Y%m%d")${{ github.run_attempt }}" >> ${GITHUB_ENV}
         echo "IOT_HUB_NAME=aruba-iot-hub-${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "DPS_NAME=aruba-dps-${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "NAMESPACE_NAME=pareto-anywhere-events-${{ env.SUFFIX }}" >> $GITHUB_ENV
