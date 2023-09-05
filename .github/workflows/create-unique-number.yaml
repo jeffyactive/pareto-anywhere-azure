@@ -1,0 +1,28 @@
+name: Create a unique number
+
+on:
+  workflow_dispatch:
+    inputs:
+      dummy_input:
+        description: 'Dummy input'
+        required: true
+        default: 'enter-anything-here'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      RANDOM_NAME: name-${RANDOM}
+      DATE_NAME: name-$(date +%s)
+      RUN_NAME: name-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+
+    # Use the master branch
+    - uses: actions/checkout@master
+
+    # Echo the names
+    - name: Echo names
+      shell: bash
+      run: |
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }}
+        echo ${{ env.RANDOM_NAME }} ${{ env.DATE_NAME }} ${{ env.RUN_NAME }}
