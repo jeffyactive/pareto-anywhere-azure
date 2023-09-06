@@ -88,17 +88,7 @@ jobs:
       shell: bash
       run: |
         az iot hub create --name ${{ env.IOT_HUB_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku S1 --location ${{ github.event.inputs.azure_region }}
-        iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
-        echo "IOT_HUB_ENDPOINT=$iothubendpoint" >> $GITHUB_ENV
-        echo "Created IoT Hub ${{ env.IOT_HUB_NAME }} using Connection String: ${{ env.IOT_HUB_ENDPOINT }}"
-
-    # Create the Device Provisioning Service for Aruba IoT Transport for Azure
-    - name: Create Device Provisioning Service
-      shell: bash
-      run: |
-        az iot dps create --name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --location ${{ github.event.inputs.azure_region }} --sku S1 --unit 1
-        az iot dps linked-hub create --dps-name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --connection-string ${{ env.IOT_HUB_ENDPOINT }} --location ${{ github.event.inputs.azure_region }}
-        echo "Created Device Provisioning Service ${{ env.DPS_NAME }}"
+        echo "Created IoT Hub ${{ env.IOT_HUB_NAME }}"
 
     # Create the Event Hub and Namespace
     - name: Create Event Hub
@@ -126,6 +116,18 @@ jobs:
         az storage account create --name ${{ env.STORAGE_ACCOUNT_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --sku Standard_LRS --location ${{ github.event.inputs.azure_region }} 
         storageconnectionstring=$(az storage account show-connection-string --name ${{ env.STORAGE_ACCOUNT_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --output tsv)
         echo "STORAGE_CONNECTION_STRING=$storageconnectionstring" >> $GITHUB_ENV
+
+    # Create the Device Provisioning Service for Aruba IoT Transport for Azure
+    # Note: this is performed well after the IoT Hub creation as it may take
+    #       time for the connection string to become available for query
+    - name: Create Device Provisioning Service
+      shell: bash
+      run: |
+        iothubendpoint=$(az iot hub connection-string show -n ${{ env.IOT_HUB_NAME }} --default --output tsv)
+        echo "IOT_HUB_ENDPOINT=$iothubendpoint" >> $GITHUB_ENV
+        az iot dps create --name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --location ${{ github.event.inputs.azure_region }} --sku S1 --unit 1
+        az iot dps linked-hub create --dps-name ${{ env.DPS_NAME }} --resource-group ${{ github.event.inputs.resource_group }} --connection-string ${{ env.IOT_HUB_ENDPOINT }} --location ${{ github.event.inputs.azure_region }}
+        echo "Created Device Provisioning Service ${{ env.DPS_NAME }}"
 
     # Create Function App (and Pricing Plan)
     - name: Create Function App
