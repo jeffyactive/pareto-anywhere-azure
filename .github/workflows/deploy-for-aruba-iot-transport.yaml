@@ -79,7 +79,7 @@ jobs:
         echo "NAMESPACE_NAME=pareto-anywhere-events-${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "EVENT_HUB_NAME=pareto-anywhere-event-hub-${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "WPS_NAME=pareto-anywhere-wps-${{ env.SUFFIX }}" >> $GITHUB_ENV
-        echo "STORAGE_ACCOUNT_NAME=paretoanywherestorage${{ env.SUFFIX }}" >> $GITHUB_ENV
+        echo "STORAGE_ACCOUNT_NAME=store${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "FUNCTION_APP_NAME=pareto-anywhere-${{ env.SUFFIX }}" >> $GITHUB_ENV
         echo "FUNCTION_APP_PLAN_NAME=pareto-anywhere-plan-${{ env.SUFFIX }}" >> $GITHUB_ENV
 
